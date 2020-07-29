@@ -18,13 +18,14 @@ RUN apk add yarn
 
 # install maven dependencies
 RUN mkdir -p /usr/src/maven
-RUN mkdir -p /usr/src/yarn
 WORKDIR /usr/src/maven
 COPY pom.xml /usr/src/maven
-RUN mvn -T 1C install
+RUN mvn -T 1C test install
 
 # install yarn dependencies
-WORKDIR /usr/src/yarn
-COPY package.json /usr/src/yarn
-COPY yarn.lock /usr/src/yarn
+ARG YB_PATH=/usr/src/yarn
+RUN mkdir -p $YB_PATH
+WORKDIR $YB_PATH
+COPY package.json $YB_PATH
+COPY yarn.lock $YB_PATH
 RUN yarn install
